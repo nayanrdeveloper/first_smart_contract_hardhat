@@ -3,7 +3,8 @@ const {
   loadFixture,
 } = require("@nomicfoundation/hardhat-network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
-const { expect } = require("chai");
+const { expect,assert } = require("chai");
+const { ethers } = require("hardhat");
 
 describe("Lock", function () {
   // We define a fixture to reuse the same setup in every test.
@@ -121,6 +122,30 @@ describe("Lock", function () {
           [lockedAmount, -lockedAmount]
         );
       });
+    });
+
+    describe("Counter", async function () {
+      let counterData;
+      beforeEach(async() => {
+        const Counter = await ethers.getContractFactory("Counter");
+        const counter = await Counter.deploy("Nayan",2);
+        await counter.deployed();
+        counterData = counter;
+
+      })
+
+      it("Counter Contract are test", async function () {
+        // expect(await counterData.getName()).to.equal("Nayan");
+        assert.equal(await counterData.getName(), "Nayan");
+        
+      });
+
+      it("decreament Counter Testing", async function(){
+        const coun = await counterData.setName("Mayur");
+        await coun.wait();
+        // expect(await counterData.counter).to.greaterThan(1);
+      })
+
     });
   });
 });
